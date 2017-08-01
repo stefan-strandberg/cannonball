@@ -84,7 +84,9 @@ void OStats::do_timers()
     {
         // Each stage has a standard counter that just increments. Do this here.
         stage_counters[cur_stage]++;
-        ohud.draw_lap_timer(0x11016C, stage_times[cur_stage], ms_value);
+
+        // [MPB] LAP TIME
+        ohud.draw_lap_timer(ohud.translate(22, 2), stage_times[cur_stage], ms_value);
     }
 
     else if (outrun.cannonball_mode == Outrun::MODE_TTRIAL)
@@ -224,7 +226,8 @@ void OStats::init_next_level()
         osoundint.queue_sound(sound::VOICE_CHECKPOINT);
         
         // Update Stage Number on HUD
-        ohud.draw_stage_number(0x110d76, cur_stage+1);
+        ohud.draw_stage_number(ohud.translate(37, 2), cur_stage+1); // [MPB] STAGE - Changed from 0x110d76 to translate(37, 2)
+        
         // No need to redraw the stage info as that was a bug in the original game
     }
 }

@@ -36,19 +36,22 @@ OHud::~OHud(void)
 // Source: 0xB462
 void OHud::draw_main_hud()
 {
-    blit_text1(HUD_LAP1);
-    blit_text1(HUD_LAP2);
+    blit_text1(16, 1, HUD_LAP1);
+    blit_text1(16, 2, HUD_LAP2);
 
     if (outrun.cannonball_mode == Outrun::MODE_ORIGINAL)
     {
-        blit_text1(HUD_TIME1);
-        blit_text1(HUD_TIME2);
-        blit_text1(HUD_SCORE1);
-        blit_text1(HUD_SCORE2);
-        blit_text1(HUD_STAGE1);
-        blit_text1(HUD_STAGE2);
-        blit_text1(HUD_ONE);
-        do_mini_map();
+        // [MPB] blit_text1(HUD_TIME1);
+        // [MPB] blit_text1(HUD_TIME2);
+        blit_text1(2, 1, HUD_SCORE1);
+        blit_text1(2, 2, HUD_SCORE2);
+        
+        // [MPB] Move stage text to top left
+        blit_text1(31, 1, HUD_STAGE1);
+        blit_text1(31, 2, HUD_STAGE2);
+        blit_text1(37, 2, HUD_ONE); // [MPB] STAGE
+        
+        // [MPB] do_mini_map();
     }
     else if (outrun.cannonball_mode == Outrun::MODE_TTRIAL)
     {
@@ -229,7 +232,8 @@ void OHud::draw_score_ingame(uint32_t score)
     if (outrun.game_state < GS_START1 || outrun.game_state > GS_BONUS)
         return;
 
-    draw_score(0x110150, score, 2);
+    // [MPB] draw_score(0x110150, score, 2);
+    draw_score(translate(7, 2), score, 2); // [MPB] SCORE
 }
 
 // Draw Score
@@ -262,7 +266,8 @@ void OHud::draw_score(uint32_t addr, const uint32_t score, uint8_t font)
 
     // Draw blank digits until we find first digit
     // Then use zero for blank digits
-    for (uint8_t i = 0; i < 7; i++)
+    // [MPB] CHANGED 7 TO 6
+    for (uint8_t i = 0; i < 6; i++)
     {
         if (!found && !digits[i])
             video.write_text16(&addr, BLANK);
@@ -729,7 +734,7 @@ void OHud::blit_text_new(uint16_t x, uint16_t y, const char* text, uint16_t pal)
         // Convert lowercase characters to uppercase
         if (c >= 'a' && c <= 'z')
             c -= 0x20;
-        else if (c == '©')
+        else if (c == 'Â©')
             c = 0x10;
         else if (c == '-')
             c = 0x2d;

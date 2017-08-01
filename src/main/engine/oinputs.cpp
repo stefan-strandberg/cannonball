@@ -79,7 +79,8 @@ void OInputs::tick(Packet* packet)
         if (!input.analog || !input.gamepad)
         {
             digital_steering();
-            digital_pedals();
+            // [MPB] digital_pedals();
+            gear_pedals(); // [MPB] 
         }
         // Analog Controls
         else
@@ -95,7 +96,8 @@ void OInputs::tick(Packet* packet)
             // Digital Pedals
             else
             {
-                digital_pedals();
+                // [MPB] digital_pedals();
+                gear_pedals(); // [MPB] 
             }
         }
     }
@@ -172,6 +174,48 @@ void OInputs::digital_pedals()
         input_brake -= brake_inc;
         if (input_brake < 0) input_brake = 0;
     }
+}
+
+// [MPB] 
+void OInputs::gear_pedals()
+{
+    // ------------------------------------------------------------------------
+    // ACCELERATION
+    // ------------------------------------------------------------------------
+
+    if (input.is_pressed(Input::GEAR1) || input.is_pressed(Input::GEAR2))
+    {
+        input_acc += acc_inc;
+        if (input_acc > 0xFF) input_acc = 0xFF;
+
+        input_brake -= brake_inc;
+        if (input_brake < 0) input_brake = 0;
+    }
+    else
+    {
+        input_acc -= acc_inc;
+        if (input_acc < 0) input_acc = 0;
+
+        input_brake += brake_inc;
+        if (input_brake > 0xFF) input_brake = 0xFF;
+    }
+
+    // ------------------------------------------------------------------------
+    // BRAKE
+    // ------------------------------------------------------------------------
+
+    /* NO BREAKING
+    if (input.is_pressed(Input::BRAKE))
+    {
+        input_brake += brake_inc;
+        if (input_brake > 0xFF) input_brake = 0xFF;
+    }
+    else
+    {
+        input_brake -= brake_inc;
+        if (input_brake < 0) input_brake = 0;
+    }
+    */
 }
 
 void OInputs::do_gear()

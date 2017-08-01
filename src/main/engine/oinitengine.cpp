@@ -282,9 +282,9 @@ void OInitEngine::update_engine()
     if (outrun.game_state >= GS_START1 && outrun.game_state <= GS_BONUS)
     {
         // Convert & Blit Car Speed
-        ohud.blit_speed(0x110CB6, car_increment >> 16);
-        ohud.blit_text1(HUD_KPH1);
-        ohud.blit_text1(HUD_KPH2);
+        // [MPB] ohud.blit_speed(0x110CB6, car_increment >> 16);
+        // [MPB] ohud.blit_text1(HUD_KPH1);
+        // [MPB] ohud.blit_text1(HUD_KPH2);
 
         // Blit High/Low Gear
         if (config.controls.gear == config.controls.GEAR_BUTTON && !config.cannonboard.enabled)
@@ -770,7 +770,7 @@ void OInitEngine::init_split_next_level()
     ostats.cur_stage++;
     oroad.stage_lookup_off += 8;    // Increment lookup to next block of stages
     ostats.route_info += 0x10;      // Route Info increments by 10 at each stage
-    ohud.do_mini_map();
+    //ohud.do_mini_map();
     init_road_seg_master();
 
     // Clear sprite palette lookup
