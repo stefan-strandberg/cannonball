@@ -215,7 +215,7 @@ void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
     setLEDPWM(_frame, x + y*16, color);
     _ledStates[y] |= mask;
   }
-  else if (color == 0 && _ledStates[y] & mask) == mask){
+  else if (color == 0 && (_ledStates[y] & mask) == mask){
     setLEDPWM(_frame, x + y*16, color);
     _ledStates[y] &= ~mask;
   }
