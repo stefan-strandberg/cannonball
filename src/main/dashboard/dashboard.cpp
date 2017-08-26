@@ -20,7 +20,6 @@ bool Dashboard::init(uint8_t addr) {
   _i2caddr = addr;
   _frame = 0;
   _module = wiringPiI2CSetup(_i2caddr);
-  _lastSpeed = 0;
 
   // shutdown
   writeRegister8(ISSI_BANK_FUNCTIONREG, ISSI_REG_SHUTDOWN, 0x00);
