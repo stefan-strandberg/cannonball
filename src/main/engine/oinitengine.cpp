@@ -290,7 +290,7 @@ void OInitEngine::update_engine()
         uint16_t kph = car_increment >> 16;
         uint16_t mph = kph * 0.621371;
         
-        dashboard.updateSpeed(mph);
+        //dashboard.updateSpeed(mph);
 
         // Blit High/Low Gear
         if (config.controls.gear == config.controls.GEAR_BUTTON && !config.cannonboard.enabled)
