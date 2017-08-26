@@ -29,6 +29,7 @@
 #include "engine/otiles.hpp"
 #include "engine/otraffic.hpp"
 #include "engine/oinitengine.hpp"
+#include "dashboard/dashboard.hpp"
 
 OInitEngine oinitengine;
 
@@ -286,13 +287,21 @@ void OInitEngine::update_engine()
         // [MPB] ohud.blit_text1(HUD_KPH1);
         // [MPB] ohud.blit_text1(HUD_KPH2);
 
+        uint16_t kph = car_increment >> 16;
+        uint16_t mph = kph * 0.621371;
+        
+        dashboard.updateSpeed(mph);
+
         // Blit High/Low Gear
         if (config.controls.gear == config.controls.GEAR_BUTTON && !config.cannonboard.enabled)
         {
-            if (oinputs.gear)
+            if (oinputs.gear) {
                 ohud.blit_text_new(9, 26, "H");
-            else
+                dashboard.updateTurbo(true);
+            } else {
                 ohud.blit_text_new(9, 26, "L");
+                dashboard.updateTurbo(false);
+            }
         }
 
         if (config.engine.layout_debug)

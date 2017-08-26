@@ -41,7 +41,7 @@ class Dashboard {
   static const uint8_t MAX_FUEL_LEVEL = 5;
 
   Dashboard(); 
-  bool begin(uint8_t addr = ISSI_ADDR_DEFAULT);
+  bool init(uint8_t addr = ISSI_ADDR_DEFAULT);
   void clearAll(void);
 
   void updateTacho(uint8_t revs);
@@ -66,5 +66,7 @@ class Dashboard {
   uint8_t _i2caddr, _frame;
   int _module;
 };
+
+extern Dashboard dashboard;
 
 #endif

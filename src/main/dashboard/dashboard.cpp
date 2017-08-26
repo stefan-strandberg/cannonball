@@ -1,16 +1,21 @@
 #include <stdint.h>
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
-#include "Dashboard.hpp"
+#include "dashboard.hpp"
 
 // Store 7 seg number formats
 unsigned char numbers[] = { 0xFC, 0x60, 0xDA, 0xF2, 0x66, 0xB6, 0xBE, 0xE0, 0xFE, 0xF6, 0x00 };
 
+Dashboard dashboard;
+
 /* Constructor */
-Dashboard::Dashboard() {
+Dashboard::Dashboard(void) {
 }
 
-bool Dashboard::begin(uint8_t addr) {
+Dashboard::~Dashboard(void) {
+}
+
+bool Dashboard::init(uint8_t addr) {
 
   _i2caddr = addr;
   _frame = 0;

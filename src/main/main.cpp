@@ -37,6 +37,7 @@
 #include "frontend/menu.hpp"
 
 #include "cannonboard/interface.hpp"
+#include "dashboard/dashboard.hpp"
 #include "engine/oinputs.hpp"
 #include "engine/ooutputs.hpp"
 #include "engine/omusic.hpp"
@@ -331,6 +332,9 @@ int main(int argc, char* argv[])
             cannonboard.init(config.cannonboard.port, config.cannonboard.baud);
             cannonboard.start();
         }
+
+        // Init dashboard
+        dashboard.init(0x74);
 
         // Populate menus
         menu->populate();
