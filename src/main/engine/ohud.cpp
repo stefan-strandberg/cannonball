@@ -351,11 +351,11 @@ void OHud::draw_rev_counter()
     if (outrun.game_state <= GS_INIT_GAME) return;
     uint16_t revs = oferrari.rev_stop_flag ? oferrari.revs_post_stop : oferrari.revs >> 16;
 
-    //revs >>= 4;
+    revs >>= 4;
 
     //dashboard.updateTacho(revs);
 
-    blit_text_new(0, 7, Utils::to_string(revs).c_str(), OHud::GREEN);
+    blit_text_new(0, 7, Utils::to_hex_string(revs).c_str(), OHud::GREEN);
 
     /*uint32_t addr = 0x110DB4; // Address of rev counter
         
