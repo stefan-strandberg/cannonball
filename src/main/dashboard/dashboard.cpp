@@ -21,14 +21,6 @@ bool Dashboard::init(uint8_t addr) {
   _frame = 0;
   _module = wiringPiI2CSetup(_i2caddr);
 
-  // Init LED states
-  _ledStates[0] = 0x00;
-  _ledStates[1] = 0x00;
-  _ledStates[2] = 0x00;
-  _ledStates[3] = 0x00;
-  _ledStates[4] = 0x00;
-  _ledStates[5] = 0x00;
-
   // shutdown
   writeRegister8(ISSI_BANK_FUNCTIONREG, ISSI_REG_SHUTDOWN, 0x00);
 
@@ -66,14 +58,14 @@ bool Dashboard::init(uint8_t addr) {
     writeRegister8(f, 0x11, 0x00);
   }
 
+  // set each led to 0 PWM
+  clearAll(); 
+
   // Don't sync audio
   writeRegister8(ISSI_BANK_FUNCTIONREG, ISSI_REG_AUDIOSYNC, 0x0);
 
   // Set inited
   _inited = true;
-
-  // set each led to 0 PWM
-  clearAll(); 
 
   return true;
 }
@@ -206,20 +198,10 @@ void Dashboard::drawNumber(uint16_t y, uint8_t num) {
 
 void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
   if (!_inited) return;
-  if ((x < 0) || (x >= 8)) return;
+  if ((x < 0) || (x >= 16)) return;
   if ((y < 0) || (y >= 9)) return;
   if (color > 255) color = 255; // PWM 8bit max
   
-  /*uint16_t mask = 0x80 >> x;
-  if (color > 0 && (_ledStates[y] & mask) != mask){
-    setLEDPWM(_frame, x + y*16, color);
-    _ledStates[y] |= mask;
-  }
-  if (color == 0 && (_ledStates[y] & mask) == mask){
-    setLEDPWM(_frame, x + y*16, color);
-    _ledStates[y] &= ~(mask);
-  }*/
-
   setLEDPWM(_frame, x + y*16, color);
 
   return;
@@ -227,10 +209,10 @@ void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
 
 void Dashboard::selectBank(uint8_t b) {
   if (!_inited) return;
-  //if (b != _lastBank){
+  if (b != _lastBank){
     wiringPiI2CWriteReg8(_module, ISSI_COMMANDREGISTER, b);
-  //  _lastBank = b;
-  //}
+    _lastBank = b;
+  }
 }
 
 void Dashboard::setLEDPWM(uint8_t bank, uint8_t lednum, uint8_t pwm) {
