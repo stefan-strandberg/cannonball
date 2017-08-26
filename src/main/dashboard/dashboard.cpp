@@ -210,7 +210,7 @@ void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
   if ((y < 0) || (y >= 9)) return;
   if (color > 255) color = 255; // PWM 8bit max
   
-  uint8_t mask = 0x80 >> x;
+  /*uint16_t mask = 0x80 >> x;
   if (color > 0 && (_ledStates[y] & mask) != mask){
     setLEDPWM(_frame, x + y*16, color);
     _ledStates[y] |= mask;
@@ -218,7 +218,9 @@ void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
   if (color == 0 && (_ledStates[y] & mask) == mask){
     setLEDPWM(_frame, x + y*16, color);
     _ledStates[y] &= ~(mask);
-  }
+  }*/
+
+  setLEDPWM(_frame, x + y*16, color);
 
   return;
 }
