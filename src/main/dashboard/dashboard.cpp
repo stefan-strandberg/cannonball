@@ -69,17 +69,16 @@ bool Dashboard::init(uint8_t addr) {
   // Don't sync audio
   writeRegister8(ISSI_BANK_FUNCTIONREG, ISSI_REG_AUDIOSYNC, 0x0);
 
-  // Set inited
-  _inited = true;
-
   // set each led to 0 PWM
   clearAll(); 
+
+  // Flag initialization finished
+  _inited = true;
 
   return true;
 }
 
 void Dashboard::clearAll(void) {
-  if (!_inited) return;
   clearTacho();
   clearFuel();
   clearTurbo();
@@ -88,7 +87,6 @@ void Dashboard::clearAll(void) {
 }
 
 void Dashboard::updateTacho(uint8_t revs) {
-  if (!_inited) return;
   if (revs < 0) revs = 0;
   if (revs > MAX_TACHO_REVS) revs = MAX_TACHO_REVS;
   
@@ -109,7 +107,6 @@ void Dashboard::clearTacho(void) {
 }
 
 void Dashboard::updateFuel(uint8_t level) {
-  if (!_inited) return;
   if (level < 0) level = 0;
   if (level > MAX_FUEL_LEVEL) level = MAX_FUEL_LEVEL;
   
@@ -130,7 +127,6 @@ void Dashboard::clearFuel(void) {
 }
 
 void Dashboard::updateTurbo(bool enabled) {
-  if (!_inited) return;
   if (enabled){
     drawPixel(0, DASH_TURBO_Y, DASH_LED_PWM);
   } else {
@@ -145,7 +141,6 @@ void Dashboard::clearTurbo(void) {
 }
 
 void Dashboard::updateSpeed(uint16_t speed) {
-  if (!_inited) return;
   if (speed < 0) speed = 0;
   if (speed > 999) speed = 999;
 
@@ -168,7 +163,6 @@ void Dashboard::updateSpeed(uint16_t speed) {
 }
 
 void Dashboard::clearSpeed(void) {
-  if (!_inited) return;
   drawNumber(DASH_SPEED_100_Y, DASH_NUMBER_EMPTY);
   drawNumber(DASH_SPEED_10_Y, DASH_NUMBER_EMPTY);
   drawNumber(DASH_SPEED_1_Y, DASH_NUMBER_EMPTY);
@@ -178,7 +172,6 @@ void Dashboard::clearSpeed(void) {
 /*************/
 
 void Dashboard::drawNumber(uint16_t y, uint8_t num) {
-  if (!_inited) return;
   if (y != DASH_SPEED_100_Y && y != DASH_SPEED_10_Y && y != DASH_SPEED_1_Y) return;
   if (num < 0) num = 0;
   if (num > 10) num = 10;
@@ -196,7 +189,6 @@ void Dashboard::drawNumber(uint16_t y, uint8_t num) {
 }
 
 void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
-  if (!_inited) return;
   if ((x < 0) || (x >= 9)) return;
   if ((y < 0) || (y >= 9)) return;
   if (color > 255) color = 255; // PWM 8bit max
@@ -205,17 +197,17 @@ void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
   if (color > 0 && (_ledStates[y] & mask) != mask){
     setLEDPWM(_frame, x + y*16, color);
     _ledStates[y] |= mask;
-  }
-  if (color == 0 && (_ledStates[y] & mask) == mask){
+  } else if (color == 0 && (_ledStates[y] & mask) == mask){
     setLEDPWM(_frame, x + y*16, color);
     _ledStates[y] &= ~(mask);
+  } else if (!_inited){ // Force initial color
+    setLEDPWM(_frame, x + y*16, color);
   }
 
   return;
 }
 
 void Dashboard::setLEDPWM(uint8_t bank, uint8_t lednum, uint8_t pwm) {
-  if (!_inited) return;
   if (lednum >= 144) return;
   writeRegister8(bank, 0x24+lednum, pwm);
 }
