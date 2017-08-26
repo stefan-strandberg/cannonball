@@ -156,9 +156,9 @@ void OHud::draw_timer1(uint16_t time)
         //const uint16_t BASE_TILE = 0x8C80;
         //draw_timer2(time, 0x1100BE, BASE_TILE);
 
-        if (time < 0x50){
+        if (time < 0x40){
             uint8_t fuel = (time >> 4) * 10 + (time & 15);
-            dashboard.updateFuel(fuel / 10);
+            dashboard.updateFuel((fuel / 10) + 1);
         } else {
             dashboard.updateFuel(5);
         }
