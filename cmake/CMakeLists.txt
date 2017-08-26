@@ -186,6 +186,11 @@ set(src_cannonboard
     "${main_cpp_base}/cannonboard/interface.cpp"
 )
 
+set(src_dashboard
+    "${main_cpp_base}/dashboard/dashboard.hpp"
+    "${main_cpp_base}/dashboard/dashboard.cpp"
+)
+
 set(src_engine
     "${main_cpp_base}/engine/oaddresses.hpp"
     "${main_cpp_base}/engine/oanimseq.hpp"
@@ -260,6 +265,7 @@ SOURCE_GROUP(src\\hwaudio FILES ${src_hwaudio})
 SOURCE_GROUP(src\\sdl FILES ${src_sdl})
 SOURCE_GROUP(src\\directx FILES ${src_directx})
 SOURCE_GROUP(src\\cannonboard FILES ${src_cannonboard})
+SOURCE_GROUP(src\\dashboard FILES ${src_dashboard})
 SOURCE_GROUP(src\\engine FILES ${src_engine})
 SOURCE_GROUP(src\\engine\\audio FILES ${src_engine_audio})
 
@@ -271,6 +277,7 @@ set(SRCS
     ${src_sdl}
     ${src_directx}
     ${src_cannonboard}
+    ${src_dashboard}
     ${src_engine}
     ${src_engine_audio}
 )
