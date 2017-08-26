@@ -21,6 +21,14 @@ bool Dashboard::init(uint8_t addr) {
   _frame = 0;
   _module = wiringPiI2CSetup(_i2caddr);
 
+  // Init LED states
+  _ledStates[0] = 0x00;
+  _ledStates[1] = 0x00;
+  _ledStates[2] = 0x00;
+  _ledStates[3] = 0x00;
+  _ledStates[4] = 0x00;
+  _ledStates[5] = 0x00;
+
   // shutdown
   writeRegister8(ISSI_BANK_FUNCTIONREG, ISSI_REG_SHUTDOWN, 0x00);
 
@@ -202,7 +210,15 @@ void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
   if ((y < 0) || (y >= 9)) return;
   if (color > 255) color = 255; // PWM 8bit max
   
-  setLEDPWM(_frame, x + y*16, color);
+  uint8_t mask = 0x80 >> x;
+  if (color > 0 && (_ledStates[y] & mask) != mask){
+    setLEDPWM(_frame, x + y*16, color);
+    _ledStates[y] |= mask;
+  }
+  else if (color == 0 && _ledStates[y] & mask) == mask){
+    setLEDPWM(_frame, x + y*16, color);
+    _ledStates[y] &= ~mask;
+  }
 
   return;
 }
@@ -211,7 +227,7 @@ void Dashboard::selectBank(uint8_t b) {
   if (!_inited) return;
   if (b != _lastBank){
     wiringPiI2CWriteReg8(_module, ISSI_COMMANDREGISTER, b);
-    _lastBank = b;
+    _lastBank = b;#
   }
 }
 
