@@ -144,7 +144,7 @@ void Dashboard::updateSpeed(uint16_t speed) {
   
   // Only update if speed is 5 more ot less than last speed
   int16_t speedDiff = _lastSpeed - speed;
-  if (speedDiff < 5 || speedDiff > -5)
+  if (speedDiff < 5 && speedDiff > -5)
     return;
 
   // Hundreds
