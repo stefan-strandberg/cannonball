@@ -20,6 +20,7 @@ bool Dashboard::init(uint8_t addr) {
   _i2caddr = addr;
   _frame = 0;
   _module = wiringPiI2CSetup(_i2caddr);
+  _lastSpeed = 0;
 
   // shutdown
   writeRegister8(ISSI_BANK_FUNCTIONREG, ISSI_REG_SHUTDOWN, 0x00);
@@ -141,6 +142,11 @@ void Dashboard::updateSpeed(uint16_t speed) {
   if (speed < 0) speed = 0;
   if (speed > 999) speed = 999;
   
+  // Only update if speed is 5 more ot less than last speed
+  int16_t speedDiff = _lastSpeed - speed;
+  if (speedDiff < 5 || speedDiff > -5)
+    return;
+
   // Hundreds
   if (speed > 99){
     uint8_t hundreds = speed / 100 % 10;
@@ -164,6 +170,9 @@ void Dashboard::updateSpeed(uint16_t speed) {
   } else {
     drawNumber(DASH_SPEED_1_Y, DASH_NUMBER_EMPTY);
   }
+
+  // Remember the last speed drawn
+  _lastSpeed = speed;
 
   return;
 }
