@@ -229,13 +229,11 @@ void Dashboard::setLEDPWM(uint8_t bank, uint8_t lednum, uint8_t pwm) {
 }
 
 void Dashboard::writeRegister8(uint8_t bank, uint8_t reg, uint8_t data) {
-  if (!_inited) return;
   selectBank(bank);
   wiringPiI2CWriteReg8(_module, reg, data);
 }
 
 uint8_t  Dashboard::readRegister8(uint8_t bank, uint8_t reg) {
-  if (!_inited) return 0;
   selectBank(bank);
   return wiringPiI2CReadReg8 (_module, reg);
 }
