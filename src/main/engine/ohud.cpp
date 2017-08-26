@@ -19,6 +19,7 @@
 #include "engine/ohud.hpp"
 #include "engine/ooutputs.hpp"
 #include "engine/ostats.hpp"
+#include "dashboard/dashboard.hpp"
 
 OHud ohud;
 
@@ -351,12 +352,16 @@ void OHud::draw_rev_counter()
     uint16_t revs = oferrari.rev_stop_flag ? oferrari.revs_post_stop : oferrari.revs >> 16;
     
     // Boost revs during countdown phase, so the bar goes further into the red
-    if (oinitengine.car_increment >> 16 == 0)
-        revs += (revs >> 2);
+    //if (oinitengine.car_increment >> 16 == 0)
+    //    revs += (revs >> 2);
 
     revs >>= 4;
 
-    uint32_t addr = 0x110DB4; // Address of rev counter
+    //dashboard.updateTacho(revs);
+
+    blit_text_new(0, 7, Utils::to_string(revs).c_str(), OHud::GREEN);
+
+    /*uint32_t addr = 0x110DB4; // Address of rev counter
         
     const uint16_t REV_OFF = 0x8120; // Rev counter: Off (Blank Tile)
     const uint16_t REV_ON1 = 0x81FE; // Rev counter: On (Single Digit)
@@ -394,7 +399,7 @@ void OHud::draw_rev_counter()
         // It would be twice as long otherwise
         if (i & 1)
             addr += 2;
-    }
+    }*/
     oferrari.rev_pitch2 = oferrari.rev_pitch1;
 }
 
