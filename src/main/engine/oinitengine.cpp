@@ -11,6 +11,7 @@
     See license.txt for more details.
 ***************************************************************************/
 
+#include <cmath>
 #include "trackloader.hpp"
 
 #include "engine/oanimseq.hpp"
@@ -291,7 +292,7 @@ void OInitEngine::update_engine()
         uint16_t mph = kph * 0.621371;
         
         // Round to the nearest 5
-        mph = ((2.5 + mph) / 5) * 5;
+        mph -= mph % 5;
 
         // Update dashboard
         dashboard.updateSpeed(mph);
