@@ -214,18 +214,17 @@ void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
   return;
 }
 
-void Dashboard::selectBank(uint8_t b) {
-  if (!_inited) return;
-  if (b != _lastBank){
-    wiringPiI2CWriteReg8(_module, ISSI_COMMANDREGISTER, b);
-    _lastBank = b;
-  }
-}
-
 void Dashboard::setLEDPWM(uint8_t bank, uint8_t lednum, uint8_t pwm) {
   if (!_inited) return;
   if (lednum >= 144) return;
   writeRegister8(bank, 0x24+lednum, pwm);
+}
+
+void Dashboard::selectBank(uint8_t b) {
+  if (b != _lastBank){
+    wiringPiI2CWriteReg8(_module, ISSI_COMMANDREGISTER, b);
+    _lastBank = b;
+  }
 }
 
 void Dashboard::writeRegister8(uint8_t bank, uint8_t reg, uint8_t data) {
