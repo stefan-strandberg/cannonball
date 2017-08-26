@@ -353,10 +353,12 @@ void OHud::draw_rev_counter()
 
     revs >>= 4;
 
-    //dashboard.updateTacho(revs);
+    // [MPB] Convert revs to right scale
     uint8_t revs2 = Utils::map(revs, 0, 15, 0, Dashboard::MAX_TACHO_REVS);
 
-    blit_text_new(0, 7, Utils::to_string(revs2).c_str(), OHud::GREEN);
+    // [MPB] Display revs on dashboard
+    dashboard.updateTacho(revs2);
+    //blit_text_new(0, 7, Utils::to_string(revs2).c_str(), OHud::GREEN);
 
     /*uint32_t addr = 0x110DB4; // Address of rev counter
         
