@@ -156,7 +156,14 @@ void OHud::draw_timer1(uint16_t time)
         //const uint16_t BASE_TILE = 0x8C80;
         //draw_timer2(time, 0x1100BE, BASE_TILE);
 
-        blit_text_new(0, 7, Utils::to_hex_string((int)time).c_str(), OHud::PINK);
+        if (time < 0x50){
+            uint8_t fuel = (time >> 4) * 10 + (time & 15);
+            dashboard.updateFuel(fuel / 10);
+        } else {
+            dashboard.updateFuel(5);
+        }
+
+        //blit_text_new(0, 7, Utils::to_hex_string((int)time).c_str(), OHud::PINK);
 
         // Blank out the OFF text area
         //video.write_text16(0x110C2, 0);
@@ -164,6 +171,7 @@ void OHud::draw_timer1(uint16_t time)
     }
     else
     {
+        dashboard.clearFuel();
         /*uint32_t dst_addr = translate(7, 1);
         const uint16_t PAL = 0x8AA0;
         const uint16_t O = (('O' - 0x41) * 2) + PAL; // Convert character to real index (D0-0x41) so A is 0x01
