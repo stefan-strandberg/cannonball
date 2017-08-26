@@ -358,8 +358,7 @@ void OHud::draw_rev_counter()
 
     // [MPB] Display revs on dashboard
     dashboard.updateTacho(revs2);
-    //blit_text_new(0, 7, Utils::to_string(revs2).c_str(), OHud::GREEN);
-
+    
     /*uint32_t addr = 0x110DB4; // Address of rev counter
         
     const uint16_t REV_OFF = 0x8120; // Rev counter: Off (Blank Tile)

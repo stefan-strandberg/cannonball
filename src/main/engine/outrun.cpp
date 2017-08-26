@@ -170,7 +170,7 @@ void Outrun::vint()
         opalette.fade_palette();
         // ... 
         ostats.do_timers();
-        // [MPB] if (cannonball_mode != MODE_TTRIAL) ohud.draw_timer1(ostats.time_counter);
+        if (cannonball_mode != MODE_TTRIAL) ohud.draw_timer1(ostats.time_counter);
         uint8_t coin = oinputs.do_credits();
         outputs->coin_chute_out(&outputs->chute1, coin == 1);
         outputs->coin_chute_out(&outputs->chute2, coin == 2);
