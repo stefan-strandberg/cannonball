@@ -40,7 +40,9 @@ class Dashboard {
   static const uint8_t MAX_TACHO_REVS = 8;
   static const uint8_t MAX_FUEL_LEVEL = 5;
 
-  Dashboard(); 
+  Dashboard(void);
+  ~Dashboard(void);
+
   bool init(uint8_t addr = ISSI_ADDR_DEFAULT);
   void clearAll(void);
 
