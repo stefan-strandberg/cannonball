@@ -141,36 +141,30 @@ void Dashboard::updateSpeed(uint16_t speed) {
   if (!_inited) return;
   if (speed < 0) speed = 0;
   if (speed > 999) speed = 999;
-  
-  if (_lastSpeed == speed)
-    return;
 
   // Hundreds
-  if (speed > 99){
-    uint8_t hundreds = speed / 100 % 10;
-    drawNumber(DASH_SPEED_100_Y, hundreds);
-  } else {
-    drawNumber(DASH_SPEED_100_Y, DASH_NUMBER_EMPTY);
+  uint8_t next100 = DASH_NUMBER_EMPTY;
+  if (speed > 99) next100 = speed / 100 % 10;
+  if (next100 != _last100){
+    drawNumber(DASH_SPEED_100_Y, next100);
+    _last100 = next100;
   }
 
   // Tens
-  if (speed > 9){
-    uint8_t tens = speed / 10 % 10;
-    drawNumber(DASH_SPEED_10_Y, tens);
-  } else {
-    drawNumber(DASH_SPEED_10_Y, DASH_NUMBER_EMPTY);
+  uint8_t next10 = DASH_NUMBER_EMPTY;
+  if (speed > 9) next10 = speed / 10 % 10;
+  if (next10 != _last10) {
+    drawNumber(DASH_SPEED_10_Y, next10);
+    _last10 = next10;
   }
 
   // Ones
-  if (speed > 0){
-    uint8_t ones = speed % 10;
-    drawNumber(DASH_SPEED_1_Y, ones);
-  } else {
-    drawNumber(DASH_SPEED_1_Y, DASH_NUMBER_EMPTY);
+  uint8_t next1 = DASH_NUMBER_EMPTY;
+  if (speed > 0) next1 = speed % 10;
+  if (next1 != _last1){
+    drawNumber(DASH_SPEED_1_Y, next1);
+    _last1 = next1;
   }
-
-  // Remember the last speed drawn
-  _lastSpeed = speed;
 
   return;
 }
