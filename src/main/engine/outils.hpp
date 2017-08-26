@@ -26,6 +26,7 @@ public:
     static uint16_t convert16_dechex(uint16_t);
     static uint32_t bcd_add(uint32_t, uint32_t);
     static uint32_t bcd_sub(uint32_t, uint32_t);
+    static long map(long x, long in_min, long in_max, long out_min, long out_max);
 
     // Inline functions
     inline static void move16(uint32_t src, uint32_t& dst)
