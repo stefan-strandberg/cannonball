@@ -1117,7 +1117,7 @@ void OFerrari::move()
         
         // move_car_rev:
         update_road_pos();
-        // [MPB] ohud.draw_rev_counter();
+        ohud.draw_rev_counter();
     } // end car_ctrl_active
 
     // Check whether we want to play slip sound
