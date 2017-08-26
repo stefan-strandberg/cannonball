@@ -227,7 +227,7 @@ void Dashboard::selectBank(uint8_t b) {
   if (!_inited) return;
   if (b != _lastBank){
     wiringPiI2CWriteReg8(_module, ISSI_COMMANDREGISTER, b);
-    _lastBank = b;#
+    _lastBank = b;
   }
 }
 

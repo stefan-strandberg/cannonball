@@ -66,7 +66,7 @@ class Dashboard {
   void writeRegister8(uint8_t bank, uint8_t reg, uint8_t data);
   uint8_t readRegister8(uint8_t bank, uint8_t reg);
   uint8_t _i2caddr, _frame, _lastBank, _last100, _last10, _last1;
-  unsigned char _tachoState, _fuelState, _speed100State, _speed10State, _speed1State;
+  unsigned char _ledStates[6];
   bool _inited;
   int _module;
 };
