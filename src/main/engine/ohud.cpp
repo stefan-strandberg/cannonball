@@ -153,16 +153,18 @@ void OHud::draw_timer1(uint16_t time)
 
     if (!outrun.freeze_timer)
     {
-        const uint16_t BASE_TILE = 0x8C80;
-        draw_timer2(time, 0x1100BE, BASE_TILE);
+        //const uint16_t BASE_TILE = 0x8C80;
+        //draw_timer2(time, 0x1100BE, BASE_TILE);
+
+        blit_text_new(0, 7, time, OHud::PINK);
 
         // Blank out the OFF text area
-        video.write_text16(0x110C2, 0);
-        video.write_text16(0x110C2 + 0x80, 0);
+        //video.write_text16(0x110C2, 0);
+        //video.write_text16(0x110C2 + 0x80, 0);
     }
     else
     {
-        uint32_t dst_addr = translate(7, 1);
+        /*uint32_t dst_addr = translate(7, 1);
         const uint16_t PAL = 0x8AA0;
         const uint16_t O = (('O' - 0x41) * 2) + PAL; // Convert character to real index (D0-0x41) so A is 0x01
         const uint16_t F = (('F' - 0x41) * 2) + PAL;
@@ -173,7 +175,7 @@ void OHud::draw_timer1(uint16_t time)
         video.write_text16(0x7E + dst_addr, F + 1); // Write second row to text ram
         video.write_text16(&dst_addr,       F);     // Write first row to text ram
         video.write_text16(0x7E + dst_addr, F + 1); // Write second row to text ram
-    }
+    */}
 }
 
 // Called directly by High Score Table
