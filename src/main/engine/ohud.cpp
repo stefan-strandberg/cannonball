@@ -350,12 +350,8 @@ void OHud::draw_rev_counter()
     // Return in attract mode and don't draw rev counter
     if (outrun.game_state <= GS_INIT_GAME) return;
     uint16_t revs = oferrari.rev_stop_flag ? oferrari.revs_post_stop : oferrari.revs >> 16;
-    
-    // Boost revs during countdown phase, so the bar goes further into the red
-    //if (oinitengine.car_increment >> 16 == 0)
-    //    revs += (revs >> 2);
 
-    revs >>= 4;
+    //revs >>= 4;
 
     //dashboard.updateTacho(revs);
 
