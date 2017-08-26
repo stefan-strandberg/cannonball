@@ -156,7 +156,7 @@ void OHud::draw_timer1(uint16_t time)
         //const uint16_t BASE_TILE = 0x8C80;
         //draw_timer2(time, 0x1100BE, BASE_TILE);
 
-        blit_text_new(0, 7, Utils::to_string((int)time).c_str(), OHud::PINK);
+        blit_text_new(0, 7, Utils::to_hex_string((int)time).c_str(), OHud::PINK);
 
         // Blank out the OFF text area
         //video.write_text16(0x110C2, 0);
