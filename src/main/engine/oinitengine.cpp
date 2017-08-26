@@ -290,6 +290,10 @@ void OInitEngine::update_engine()
         uint16_t kph = car_increment >> 16;
         uint16_t mph = kph * 0.621371;
         
+        // Round to the nearest 5
+        mph = ((mph + 2.5) / 5) * 5;
+
+        // Update dashboard
         dashboard.updateSpeed(mph);
 
         // Blit High/Low Gear
