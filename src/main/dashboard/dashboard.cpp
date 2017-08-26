@@ -66,14 +66,14 @@ bool Dashboard::init(uint8_t addr) {
     writeRegister8(f, 0x11, 0x00);
   }
 
-  // set each led to 0 PWM
-  clearAll(); 
-
   // Don't sync audio
   writeRegister8(ISSI_BANK_FUNCTIONREG, ISSI_REG_AUDIOSYNC, 0x0);
 
   // Set inited
   _inited = true;
+
+  // set each led to 0 PWM
+  clearAll(); 
 
   return true;
 }
@@ -206,7 +206,7 @@ void Dashboard::drawNumber(uint16_t y, uint8_t num) {
 
 void Dashboard::drawPixel(int16_t x, int16_t y, uint16_t color) {
   if (!_inited) return;
-  if ((x < 0) || (x >= 16)) return;
+  if ((x < 0) || (x >= 8)) return;
   if ((y < 0) || (y >= 9)) return;
   if (color > 255) color = 255; // PWM 8bit max
   
