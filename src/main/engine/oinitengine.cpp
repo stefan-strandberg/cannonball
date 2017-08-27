@@ -298,8 +298,8 @@ void OInitEngine::update_engine()
         dashboard.updateSpeed(mph);
 
         // Blit High/Low Gear
-        if (config.controls.gear == config.controls.GEAR_BUTTON && !config.cannonboard.enabled)
-        {
+        //if (config.controls.gear == config.controls.GEAR_BUTTON && !config.cannonboard.enabled)
+        //{
             if (oinputs.gear) {
                 //ohud.blit_text_new(9, 26, "H");
                 dashboard.updateTurbo(true);
@@ -307,7 +307,7 @@ void OInitEngine::update_engine()
                 //ohud.blit_text_new(9, 26, "L");
                 dashboard.updateTurbo(false);
             }
-        }
+        //}
 
         if (config.engine.layout_debug)
             ohud.draw_debug_info(oroad.road_pos, oroad.height_lookup_wrk, trackloader.read_sprite_pattern_index());
