@@ -68,11 +68,12 @@ void OOutputs::init()
   // turn on ERM_OPEN_LOOP
   writeRegister8(DRV2605_REG_CONTROL3, readRegister8(DRV2605_REG_CONTROL3) | 0x20);
 
-  setMode(DRV2605_MODE_INTTRIG);
+  //setMode(DRV2605_MODE_INTTRIG);
+  setMode(DRV2605_MODE_REALTIME);
 
-  selectLibrary(1);
-  setWaveform(0, 1);
-  setWaveform(2, 0);
+  //selectLibrary(1);
+  //setWaveform(0, 1);
+  //setWaveform(2, 0);
 }
 
 void OOutputs::tick()
@@ -88,7 +89,7 @@ void OOutputs::do_vibrate_mini()
 {
     if (outrun.game_state != GS_INGAME)
     {
-        stop();
+        setRealtimeValue(0x00);
         return;
     }
 
@@ -100,7 +101,7 @@ void OOutputs::do_vibrate_mini()
     {
         if (speed <= 10)
         {
-            stop();
+            setRealtimeValue(0x00);
             return;
         }
     }
@@ -109,7 +110,7 @@ void OOutputs::do_vibrate_mini()
     {
         if (speed < 10 || oferrari.wheel_state == OFerrari::WHEELS_ON)
         {
-            stop();
+            setRealtimeValue(0x00);
             return;
         }  
 
@@ -122,12 +123,12 @@ void OOutputs::do_vibrate_mini()
         if (index > vibrate_counter)
         {
             vibrate_counter = 0;
-            stop();
+            setRealtimeValue(0x00);
         }
         else
         {
             vibrate_counter++;
-            go();
+            setRealtimeValue(0x7F);
         }
         return;
     }
@@ -140,12 +141,12 @@ void OOutputs::do_vibrate_mini()
     if (index > vibrate_counter)
     {
         vibrate_counter = 0;
-        stop();
+        setRealtimeValue(0x00);
     }
     else
     {
         vibrate_counter++;
-        go();
+        setRealtimeValue(0x7F);
     }
 }
 
