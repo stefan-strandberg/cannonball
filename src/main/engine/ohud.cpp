@@ -493,12 +493,12 @@ void OHud::draw_insert_coin()
             if (outrun.tick_counter & BIT_4)
             {
                 blit_text1(TEXT1_PRESS_START);
-                outrun.outputs->set_digital(OOutputs::D_START_LAMP);
+                // [MPB] outrun.outputs->set_digital(OOutputs::D_START_LAMP);
             }
             else
             {
                 blit_text1(TEXT1_CLEAR_START);
-                outrun.outputs->clear_digital(OOutputs::D_START_LAMP);
+                // [MPB] outrun.outputs->clear_digital(OOutputs::D_START_LAMP);
             }
         }
         // Flash Insert Coins / Freeplay Press Start
