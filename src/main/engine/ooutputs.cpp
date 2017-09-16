@@ -74,6 +74,12 @@ void OOutputs::init()
   //selectLibrary(1);
   //setWaveform(0, 1);
   //setWaveform(2, 0);
+  
+  // Reset vibrate counter
+  vibrate_counter = 0;
+
+  // Stop any vibrating
+  setRealtimeValue(0x00);
 }
 
 void OOutputs::tick()

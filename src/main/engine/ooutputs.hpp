@@ -78,6 +78,7 @@ public:
 private:
 
     int _module;
+    int16_t vibrate_counter;
 
     void do_vibrate_mini();
 
