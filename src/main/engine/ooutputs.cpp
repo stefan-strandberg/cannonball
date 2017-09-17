@@ -104,8 +104,7 @@ void OOutputs::tick()
     }
 
     // Normal car movement
-    // If low speed or fully on road, stop any vibrating
-    if (speed < 10 || oferrari.wheel_state == OFerrari::WHEELS_ON)
+    if (speed < 10)
     {
         setRealtimeValue(0x00);
         return;
@@ -124,6 +123,9 @@ void OOutputs::tick()
         setRealtimeValue(0x1F);
         return;
     }
+
+    setRealtimeValue(0x00);
+    return;
 
     // Car Normal
     /*else if (!ocrash.skid_counter)
