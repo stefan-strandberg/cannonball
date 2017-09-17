@@ -90,7 +90,7 @@ void OOutputs::tick()
     if (ocrash.crash_counter)
     {
         if (speed > 10) {
-            setRealtimeValue(0x7F);
+            setRealtimeValue(0x5F);
         } else {
             setRealtimeValue(0x00);
         }
@@ -120,7 +120,7 @@ void OOutputs::tick()
     // Wheels spinning
     if (oferrari.car_state == OFerrari::CAR_SMOKE)
     {
-        setRealtimeValue(0x1F);
+        setRealtimeValue(0x2F);
         return;
     }
 
