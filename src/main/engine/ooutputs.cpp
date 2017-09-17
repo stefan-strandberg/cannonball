@@ -90,7 +90,7 @@ void OOutputs::tick()
     // Car Crashing: Diable Motor once speed below 10
     if (ocrash.crash_counter)
     {
-        if (speed > 10) 
+        if (speed > 10) {
             setRealtimeValue(0x00);
         } else {
             setRealtimeValue(0x7F);
