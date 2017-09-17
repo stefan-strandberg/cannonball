@@ -90,19 +90,17 @@ void OOutputs::tick()
     if (ocrash.crash_counter)
     {
         if (speed > 10) {
-            setRealtimeValue(0x00);
-        } else {
             setRealtimeValue(0x7F);
+        } else {
+            setRealtimeValue(0x00);
         }
         return;
     }
 
     // Car skidding
     if (ocrash.skid_counter) {
-
       setRealtimeValue(0x3F);
       return;
-
     }
 
     // Normal car movement
@@ -117,6 +115,13 @@ void OOutputs::tick()
     if (oferrari.wheel_state != OFerrari::WHEELS_ON)
     {
         setRealtimeValue(0x3F);
+        return;
+    }
+
+    // Wheels spinning
+    if (oferrari.car_state == OFerrari::CAR_SMOKE)
+    {
+        setRealtimeValue(0x1F);
         return;
     }
 
