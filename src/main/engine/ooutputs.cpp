@@ -98,10 +98,12 @@ void OOutputs::tick()
     }
 
     // Car skidding
-    if (ocrash.skid_counter) {
-      setRealtimeValue(0x3F);
-      return;
-    }
+    //if (ocrash.skid_counter) {
+
+      //setRealtimeValue(0x3F);
+      //return;
+
+    //}
 
     // Normal car movement
     if (speed < 10)
@@ -115,13 +117,22 @@ void OOutputs::tick()
     {
         setRealtimeValue(0x3F);
         return;
-    }
 
-    // Wheels spinning
-    if (oferrari.car_state == OFerrari::CAR_SMOKE)
-    {
+    } else {
+
+      // Wheels are on road but slipping
+      if (oferrari.is_slipping){
         setRealtimeValue(0x2F);
         return;
+      }
+
+      // Wheels spinning
+      if (oferrari.car_state == OFerrari::CAR_SMOKE)
+      {
+          setRealtimeValue(0x2F);
+          return;
+      }
+
     }
 
     setRealtimeValue(0x00);
