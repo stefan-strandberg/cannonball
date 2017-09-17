@@ -97,30 +97,28 @@ void OOutputs::tick()
         }
         return;
     }
+
     // Car skidding
-    else if (ocrash.skid_counter) {
+    if (ocrash.skid_counter) {
 
       setRealtimeValue(0x3F);
       return;
 
     }
+
     // Normal car movement
-    else {
+    // If low speed or fully on road, stop any vibrating
+    if (speed < 10 || oferrari.wheel_state == OFerrari::WHEELS_ON)
+    {
+        setRealtimeValue(0x00);
+        return;
+    } 
 
-      // If low speed or fully on road, stop any vibrating
-      if (speed < 10 || oferrari.wheel_state == OFerrari::WHEELS_ON)
-      {
-          setRealtimeValue(0x00);
-          return;
-      } 
-
-      // Wheels are off road
-      if (oferrari.wheel_state != OFerrari::WHEELS_ON)
-      {
-          setRealtimeValue(0x3F);
-          return;
-      }
-
+    // Wheels are off road
+    if (oferrari.wheel_state != OFerrari::WHEELS_ON)
+    {
+        setRealtimeValue(0x3F);
+        return;
     }
 
     // Car Normal
