@@ -80,12 +80,6 @@ private:
     int _module;
     int16_t vibrate_counter;
 
-    void do_vibrate_mini();
-
-    void setWaveform(uint8_t slot, uint8_t w);
-    void selectLibrary(uint8_t lib);
-    void go(void);
-    void stop(void);
     void setMode(uint8_t mode);
     void setRealtimeValue(uint8_t rtp);
 

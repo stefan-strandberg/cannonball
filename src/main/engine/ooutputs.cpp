@@ -42,10 +42,10 @@ OOutputs::~OOutputs(void)
 // Source: 0xECE8
 void OOutputs::init()
 {
+  _vCounter = 0;
   _module = wiringPiI2CSetup(DRV2605_ADDR);
 
   uint8_t id = readRegister8(DRV2605_REG_STATUS);
-  //Serial.print("Status 0x"); Serial.println(id, HEX);
   
   writeRegister8(DRV2605_REG_MODE, 0x00); // out of standby
   
@@ -68,31 +68,16 @@ void OOutputs::init()
   // turn on ERM_OPEN_LOOP
   writeRegister8(DRV2605_REG_CONTROL3, readRegister8(DRV2605_REG_CONTROL3) | 0x20);
 
-  //setMode(DRV2605_MODE_INTTRIG);
+  // Run in realtime mode
   setMode(DRV2605_MODE_REALTIME);
 
-  //selectLibrary(1);
-  //setWaveform(0, 1);
-  //setWaveform(2, 0);
-  
-  // Reset vibrate counter
-  vibrate_counter = 0;
-
-  // Stop any vibrating
+  // Turn off by default
   setRealtimeValue(0x00);
 }
 
 void OOutputs::tick()
 {
-    do_vibrate_mini();
-}
-
-// ------------------------------------------------------------------------------------------------
-// Mini Upright: Steering Wheel Movement
-// ------------------------------------------------------------------------------------------------
-
-void OOutputs::do_vibrate_mini()
-{
+    // If game isn't running, then just exit
     if (outrun.game_state != GS_INGAME)
     {
         setRealtimeValue(0x00);
@@ -105,14 +90,41 @@ void OOutputs::do_vibrate_mini()
     // Car Crashing: Diable Motor once speed below 10
     if (ocrash.crash_counter)
     {
-        if (speed <= 10)
-        {
+        if (speed > 10) 
             setRealtimeValue(0x00);
-            return;
+        } else {
+            setRealtimeValue(0x7F);
         }
+        return;
     }
+    // Car skidding
+    else if (ocrash.skid_counter) {
+
+      setRealtimeValue(0x3F);
+      return;
+
+    }
+    // Normal car movement
+    else {
+
+      // If low speed or fully on road, stop any vibrating
+      if (speed < 10 || oferrari.wheel_state == OFerrari::WHEELS_ON)
+      {
+          setRealtimeValue(0x00);
+          return;
+      } 
+
+      // Wheels are off road
+      if (oferrari.wheel_state != OFerrari::WHEELS_ON)
+      {
+          setRealtimeValue(0x3F);
+          return;
+      }
+
+    }
+
     // Car Normal
-    else if (!ocrash.skid_counter)
+    /*else if (!ocrash.skid_counter)
     {
         if (speed < 10 || oferrari.wheel_state == OFerrari::WHEELS_ON)
         {
@@ -126,14 +138,14 @@ void OOutputs::do_vibrate_mini()
         else if (speed > 20)  index = 2;
         else                  index = 1;
 
-        if (index > vibrate_counter)
+        if (index > _vCounter)
         {
-            vibrate_counter = 0;
+            _vCounter = 0;
             setRealtimeValue(0x00);
         }
         else
         {
-            vibrate_counter++;
+            _vCounter++;
             setRealtimeValue(0x7F);
         }
         return;
@@ -144,40 +156,31 @@ void OOutputs::do_vibrate_mini()
     else if (speed > 70) index = 3;
     else if (speed > 50) index = 2;
     else if (speed > 30) index = 1;
-    if (index > vibrate_counter)
+    if (index > _vCounter)
     {
-        vibrate_counter = 0;
+        _vCounter = 0;
         setRealtimeValue(0x00);
     }
     else
     {
-        vibrate_counter++;
+        _vCounter++;
         setRealtimeValue(0x7F);
-    }
+    }*/
 }
 
-void OOutputs::setWaveform(uint8_t slot, uint8_t w) {
-  writeRegister8(DRV2605_REG_WAVESEQ1+slot, w);
-}
-
-void OOutputs::selectLibrary(uint8_t lib) {
-  writeRegister8(DRV2605_REG_LIBRARY, lib);
-}
-
-void OOutputs::go() {
-  writeRegister8(DRV2605_REG_GO, 1);
-}
-
-void OOutputs::stop() {
-  writeRegister8(DRV2605_REG_GO, 0);
-}
+// ------------------------------------------------------------------------------------------------
+// Private
+// ------------------------------------------------------------------------------------------------
 
 void OOutputs::setMode(uint8_t mode) {
   writeRegister8(DRV2605_REG_MODE, mode);
 }
 
 void OOutputs::setRealtimeValue(uint8_t rtp) {
-  writeRegister8(DRV2605_REG_RTPIN, rtp);
+    if (rtp != _currentV){
+        writeRegister8(DRV2605_REG_RTPIN, rtp);
+        _currentV = rtp;
+    }
 }
 
 void OOutputs::writeRegister8(uint8_t reg, uint8_t val) {
