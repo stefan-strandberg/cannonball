@@ -42,8 +42,6 @@ OOutputs::~OOutputs(void)
 // Source: 0xECE8
 void OOutputs::init()
 {
-  _vCounter = 0;
-  _currentV = 0;
   _module = wiringPiI2CSetup(DRV2605_ADDR);
 
   uint8_t id = readRegister8(DRV2605_REG_STATUS);
@@ -176,9 +174,9 @@ void OOutputs::setMode(uint8_t mode) {
 }
 
 void OOutputs::setRealtimeValue(uint8_t rtp) {
-    if (rtp != _currentV){
+    if (rtp != _current_v){
         writeRegister8(DRV2605_REG_RTPIN, rtp);
-        _currentV = rtp;
+        _current_v = rtp;
     }
 }
 

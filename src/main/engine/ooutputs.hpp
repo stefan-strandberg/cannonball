@@ -78,7 +78,7 @@ public:
 private:
 
     int _module;
-    int16_t vibrate_counter;
+    uint8_t _current_v;
 
     void setMode(uint8_t mode);
     void setRealtimeValue(uint8_t rtp);
