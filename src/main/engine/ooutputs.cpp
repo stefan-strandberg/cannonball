@@ -90,7 +90,7 @@ void OOutputs::tick()
     if (ocrash.crash_counter)
     {
         if (speed > 10) {
-            setRealtimeValue(0x7F);
+            setRealtimeValue(0x5F);
         } else {
             setRealtimeValue(0x00);
         }
@@ -115,21 +115,21 @@ void OOutputs::tick()
     // Wheels are off road
     if (oferrari.wheel_state != OFerrari::WHEELS_ON)
     {
-        setRealtimeValue(0x7F);
+        setRealtimeValue(0x3F);
         return;
 
     } else {
 
       // Wheels are on road but slipping
       if (oferrari.is_slipping){
-        setRealtimeValue(0x7F);
+        setRealtimeValue(0x2F);
         return;
       }
 
       // Wheels spinning
       if (oferrari.car_state == OFerrari::CAR_SMOKE)
       {
-          setRealtimeValue(0x7F);
+          setRealtimeValue(0x2F);
           return;
       }
 
