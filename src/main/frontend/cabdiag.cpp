@@ -131,7 +131,7 @@ bool CabDiag::tick(Packet* packet)
             break;
 
         case STATE_MOTORT:
-            // [MPB] press_start_to_exit = outrun.outputs->diag_motor(packet->ai1, packet->mci, 0);
+            press_start_to_exit = outrun.outputs->diag_motor(packet->ai1, packet->mci, 0);
             break;
     }
     osprites.sprite_copy();
@@ -208,21 +208,21 @@ void CabDiag::tick_output()
     {
         ohud.blit_text_new(24, 6, " ON", 0x80);
         ohud.blit_text_new(24, 7, " ON", 0x80);
-        // [MPB] outrun.outputs->set_digital(OOutputs::D_START_LAMP);
-        // [MPB] outrun.outputs->set_digital(OOutputs::D_BRAKE_LAMP);
+        outrun.outputs->set_digital(OOutputs::D_START_LAMP);
+        outrun.outputs->set_digital(OOutputs::D_BRAKE_LAMP);
     }
     else
     {
         ohud.blit_text_new(24, 6, "OFF", 0x86);
         ohud.blit_text_new(24, 7, "OFF", 0x86);
-        // [MPB] outrun.outputs->clear_digital(OOutputs::D_START_LAMP);
-        // [MPB] outrun.outputs->clear_digital(OOutputs::D_BRAKE_LAMP);
+        outrun.outputs->clear_digital(OOutputs::D_START_LAMP);
+        outrun.outputs->clear_digital(OOutputs::D_BRAKE_LAMP);
     }
 
     if (done)
     {
-        // [MPB] outrun.outputs->clear_digital(OOutputs::D_START_LAMP);
-        // [MPB] outrun.outputs->clear_digital(OOutputs::D_BRAKE_LAMP);
+        outrun.outputs->clear_digital(OOutputs::D_START_LAMP);
+        outrun.outputs->clear_digital(OOutputs::D_BRAKE_LAMP);
     }
 }
 

@@ -32,7 +32,6 @@
 #include "engine/otraffic.hpp"
 #include "engine/outils.hpp"
 #include "cannonboard/interface.hpp"
-#include "dashboard/dashboard.hpp"
 
 Outrun outrun;
 
@@ -173,8 +172,8 @@ void Outrun::vint()
         ostats.do_timers();
         if (cannonball_mode != MODE_TTRIAL) ohud.draw_timer1(ostats.time_counter);
         uint8_t coin = oinputs.do_credits();
-        // [MPB] outputs->coin_chute_out(&outputs->chute1, coin == 1);
-        // [MPB] outputs->coin_chute_out(&outputs->chute2, coin == 2);
+        outputs->coin_chute_out(&outputs->chute1, coin == 1);
+        outputs->coin_chute_out(&outputs->chute2, coin == 2);
         oinitengine.set_granular_position();
     }
 }
@@ -269,7 +268,6 @@ void Outrun::jump_table(Packet* packet)
     {
         if (game_state == GS_CALIBRATE_MOTOR)
         {
-            /* [MPB] No needed
             if (outputs->calibrate_motor(packet->ai1, packet->mci, 0))
             {
                 video.enabled     = false;
@@ -277,16 +275,13 @@ void Outrun::jump_table(Packet* packet)
                 oroad.horizon_set = 0;
                 boot();
             }
-            */
         }
         else
         {
-            // [MPB] Always tick
-            outputs->tick();
-            //if (config.controls.haptic && config.controls.analog)
-            //    outputs->tick(OOutputs::MODE_FFEEDBACK, oinputs.input_steering);
-            //else if (config.cannonboard.enabled)
-            //    outputs->tick(OOutputs::MODE_CABINET, packet->ai1, config.cannonboard.cabinet);
+            if (config.controls.haptic && config.controls.analog)
+                outputs->tick(OOutputs::MODE_FFEEDBACK, oinputs.input_steering);
+            else if (config.cannonboard.enabled)
+                outputs->tick(OOutputs::MODE_CABINET, packet->ai1, config.cannonboard.cabinet);
         }
     }
 
@@ -301,14 +296,14 @@ void Outrun::jump_table(Packet* packet)
         x = 1;
         y = 6;
         ohud.blit_text_new(x, y, "AI1 MOTOR"); ohud.blit_text_new(x + 10, y, Utils::to_hex_string(packet->ai1).c_str(), OHud::PINK); x += 13;
-        // [MPB] ohud.blit_text_new(x, y, "MC OUT");    ohud.blit_text_new(x + 10, y, Utils::to_hex_string(outputs->hw_motor_control).c_str(), OHud::PINK); x += 13;
+        ohud.blit_text_new(x, y, "MC OUT");    ohud.blit_text_new(x + 10, y, Utils::to_hex_string(outputs->hw_motor_control).c_str(), OHud::PINK); x += 13;
         ohud.blit_text_new(x, y, "MC IN");     ohud.blit_text_new(x + 10, y, Utils::to_hex_string(packet->mci).c_str(), OHud::PINK);
 
         x = 1;
         y = 7;
         ohud.blit_text_new(x, y, "DI1");     ohud.blit_text_new(x + 10, y, Utils::to_hex_string(packet->di1).c_str(), OHud::PINK); x += 13;
         ohud.blit_text_new(x, y, "DI2");     ohud.blit_text_new(x + 10, y, Utils::to_hex_string(packet->di2).c_str(), OHud::PINK); x += 13;
-        // [MPB] ohud.blit_text_new(x, y, "DIG OUT"); ohud.blit_text_new(x + 10, y, Utils::to_hex_string(outputs->dig_out).c_str(), OHud::PINK); x += 13;
+        ohud.blit_text_new(x, y, "DIG OUT"); ohud.blit_text_new(x + 10, y, Utils::to_hex_string(outputs->dig_out).c_str(), OHud::PINK); x += 13;
     }
 }
 
@@ -520,7 +515,6 @@ void Outrun::main_switch()
                 ohud.blit_text_new(9,  18, "CRASHES            - ");
                 ohud.blit_text_new(31, 18, Utils::to_string((int) ttrial.crashes).c_str(), OHud::GREEN);
             }
-            dashboard.clearAll();
             osoundint.queue_sound(sound::NEW_COMMAND);
             game_state = GS_GAMEOVER;
 

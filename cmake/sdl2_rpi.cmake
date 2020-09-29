@@ -3,23 +3,18 @@
 set(lib_base /usr/include)
 set(sdl_root ${lib_base}/SDL2)
 
-include_directories(
-    "${sdl_root}"
-    "/usr/local/include"
-)
+include_directories("${sdl_root}")
 
 link_libraries(cannonball 
     SDL2
-    wiringPi
 )
 
 # Linking
 link_directories(
     "${sdl_root}/lib"
-    "/usr/local/lib"
 )
 
-add_definitions(-O3 -DSDL2 -march=armv6 -mfpu=vfp -mfloat-abi=hard -lwiringPi)
+add_definitions(-O3 -DSDL2 -march=armv6 -mfpu=vfp -mfloat-abi=hard)
  
 # Location for Cannonball to create save files
 # Used to auto-generate setup.hpp with various file paths
