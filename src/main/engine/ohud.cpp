@@ -19,7 +19,6 @@
 #include "engine/ohud.hpp"
 #include "engine/ooutputs.hpp"
 #include "engine/ostats.hpp"
-#include "dashboard/dashboard.hpp"
 
 OHud ohud;
 
@@ -37,22 +36,19 @@ OHud::~OHud(void)
 // Source: 0xB462
 void OHud::draw_main_hud()
 {
-    blit_text1(16, 1, HUD_LAP1);
-    blit_text1(16, 2, HUD_LAP2);
+    blit_text1(HUD_LAP1);
+    blit_text1(HUD_LAP2);
 
     if (outrun.cannonball_mode == Outrun::MODE_ORIGINAL)
     {
-        // [MPB] blit_text1(HUD_TIME1);
-        // [MPB] blit_text1(HUD_TIME2);
-        blit_text1(2, 1, HUD_SCORE1);
-        blit_text1(2, 2, HUD_SCORE2);
-        
-        // [MPB] Move stage text to top left
-        blit_text1(31, 1, HUD_STAGE1);
-        blit_text1(31, 2, HUD_STAGE2);
-        blit_text1(37, 2, HUD_ONE); // [MPB] STAGE
-        
-        // [MPB] do_mini_map();
+        blit_text1(HUD_TIME1);
+        blit_text1(HUD_TIME2);
+        blit_text1(HUD_SCORE1);
+        blit_text1(HUD_SCORE2);
+        blit_text1(HUD_STAGE1);
+        blit_text1(HUD_STAGE2);
+        blit_text1(HUD_ONE);
+        do_mini_map();
     }
     else if (outrun.cannonball_mode == Outrun::MODE_TTRIAL)
     {
@@ -153,26 +149,16 @@ void OHud::draw_timer1(uint16_t time)
 
     if (!outrun.freeze_timer)
     {
-        //const uint16_t BASE_TILE = 0x8C80;
-        //draw_timer2(time, 0x1100BE, BASE_TILE);
-
-        if (time < 0x40){
-            uint8_t fuel = (time >> 4) * 10 + (time & 15);
-            dashboard.updateFuel((fuel / 10) + 1);
-        } else {
-            dashboard.updateFuel(5);
-        }
-
-        //blit_text_new(0, 7, Utils::to_hex_string((int)time).c_str(), OHud::PINK);
+        const uint16_t BASE_TILE = 0x8C80;
+        draw_timer2(time, 0x1100BE, BASE_TILE);
 
         // Blank out the OFF text area
-        //video.write_text16(0x110C2, 0);
-        //video.write_text16(0x110C2 + 0x80, 0);
+        video.write_text16(0x110C2, 0);
+        video.write_text16(0x110C2 + 0x80, 0);
     }
     else
     {
-        dashboard.clearFuel();
-        /*uint32_t dst_addr = translate(7, 1);
+        uint32_t dst_addr = translate(7, 1);
         const uint16_t PAL = 0x8AA0;
         const uint16_t O = (('O' - 0x41) * 2) + PAL; // Convert character to real index (D0-0x41) so A is 0x01
         const uint16_t F = (('F' - 0x41) * 2) + PAL;
@@ -183,7 +169,7 @@ void OHud::draw_timer1(uint16_t time)
         video.write_text16(0x7E + dst_addr, F + 1); // Write second row to text ram
         video.write_text16(&dst_addr,       F);     // Write first row to text ram
         video.write_text16(0x7E + dst_addr, F + 1); // Write second row to text ram
-    */}
+    }
 }
 
 // Called directly by High Score Table
@@ -243,8 +229,7 @@ void OHud::draw_score_ingame(uint32_t score)
     if (outrun.game_state < GS_START1 || outrun.game_state > GS_BONUS)
         return;
 
-    // [MPB] draw_score(0x110150, score, 2);
-    draw_score(translate(7, 2), score, 2); // [MPB] SCORE
+    draw_score(0x110150, score, 2);
 }
 
 // Draw Score
@@ -277,8 +262,7 @@ void OHud::draw_score(uint32_t addr, const uint32_t score, uint8_t font)
 
     // Draw blank digits until we find first digit
     // Then use zero for blank digits
-    // [MPB] CHANGED 7 TO 6
-    for (uint8_t i = 0; i < 6; i++)
+    for (uint8_t i = 0; i < 7; i++)
     {
         if (!found && !digits[i])
             video.write_text16(&addr, BLANK);
@@ -360,16 +344,14 @@ void OHud::draw_rev_counter()
     // Return in attract mode and don't draw rev counter
     if (outrun.game_state <= GS_INIT_GAME) return;
     uint16_t revs = oferrari.rev_stop_flag ? oferrari.revs_post_stop : oferrari.revs >> 16;
+    
+    // Boost revs during countdown phase, so the bar goes further into the red
+    if (oinitengine.car_increment >> 16 == 0)
+        revs += (revs >> 2);
 
     revs >>= 4;
 
-    // [MPB] Convert revs to right scale
-    uint8_t revs2 = Utils::map(revs, 0, 15, 0, Dashboard::MAX_TACHO_REVS);
-
-    // [MPB] Display revs on dashboard
-    dashboard.updateTacho(revs2);
-    
-    /*uint32_t addr = 0x110DB4; // Address of rev counter
+    uint32_t addr = 0x110DB4; // Address of rev counter
         
     const uint16_t REV_OFF = 0x8120; // Rev counter: Off (Blank Tile)
     const uint16_t REV_ON1 = 0x81FE; // Rev counter: On (Single Digit)
@@ -407,7 +389,7 @@ void OHud::draw_rev_counter()
         // It would be twice as long otherwise
         if (i & 1)
             addr += 2;
-    }*/
+    }
     oferrari.rev_pitch2 = oferrari.rev_pitch1;
 }
 
@@ -493,12 +475,12 @@ void OHud::draw_insert_coin()
             if (outrun.tick_counter & BIT_4)
             {
                 blit_text1(TEXT1_PRESS_START);
-                // [MPB] outrun.outputs->set_digital(OOutputs::D_START_LAMP);
+                outrun.outputs->set_digital(OOutputs::D_START_LAMP);
             }
             else
             {
                 blit_text1(TEXT1_CLEAR_START);
-                // [MPB] outrun.outputs->clear_digital(OOutputs::D_START_LAMP);
+                outrun.outputs->clear_digital(OOutputs::D_START_LAMP);
             }
         }
         // Flash Insert Coins / Freeplay Press Start
@@ -747,7 +729,7 @@ void OHud::blit_text_new(uint16_t x, uint16_t y, const char* text, uint16_t pal)
         // Convert lowercase characters to uppercase
         if (c >= 'a' && c <= 'z')
             c -= 0x20;
-        else if (c == 'Â©')
+        else if (c == '©')
             c = 0x10;
         else if (c == '-')
             c = 0x2d;

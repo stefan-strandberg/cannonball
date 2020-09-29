@@ -10,7 +10,7 @@
          1 is full-screen
          2 is full-screen stretched, no borders. (Aspect ratio will be lost. Scanlines will be disabled.)
     -->
-    <mode>1</mode>
+    <mode>0</mode>
 
     <!-- 
         Windowed Mode Settings 
@@ -38,7 +38,7 @@
          1 = 30/60 FPS. Original Game Mode.  (The original experience)
          2 = 60    FPS. Smooth Mode.         (Full 60fps)
     -->
-    <fps>0</fps>
+    <fps>2</fps>
     
     <!-- Enable FPS Counter -->
     <fps_counter>0</fps_counter>
@@ -121,7 +121,7 @@
     1 = Original OutRun Controls (Requires CannonBoard PCB setup)
     
 -->
-<controls mode = "2">
+<controls mode = "1">
     <!-- Gears: 
         0 = Manual   (Click to shift, for normal play)
         1 = Manual   (Hold to shift, for cabinet play)
@@ -172,7 +172,7 @@
          1 = On
          2 = Wheel Only
     -->
-    <analog enabled = "2">
+    <analog enabled = "0">
         <!-- Select axis for analog controls 
              You can place the accelerator and the brake on the same axis if your controller
              has a split axis setup.
@@ -246,7 +246,7 @@
     <traffic>1</traffic>
     
     <!-- Freeplay Mode -->
-    <freeplay>1</freeplay>
+    <freeplay>0</freeplay>
     
     <!-- The original Japanese release of OutRun featured slightly different
          tracks and course ordering. 

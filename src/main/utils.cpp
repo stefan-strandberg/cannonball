@@ -43,8 +43,3 @@ uint32_t Utils::from_hex_string(std::string s)
     // output it as a signed type
     return static_cast<unsigned int>(x);
 }
-
-long Utils::map(long x, long in_min, long in_max, long out_min, long out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
