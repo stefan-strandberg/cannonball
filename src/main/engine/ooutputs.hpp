@@ -16,143 +16,74 @@
 
 #pragma once
 
-#include "stdint.hpp"
+#include <stdint.h>
+#include <wiringPi.h>
+#include <wiringPiI2C.h>
 
-struct CoinChute
-{
-    // Coin Chute Counters
-    uint8_t counter[3];
-    // Output bit
-    uint8_t output_bit;
-};
+#define DRV2605_ADDR 0x5A
+
+#define DRV2605_REG_STATUS 0x00
+#define DRV2605_REG_MODE 0x01
+#define DRV2605_MODE_INTTRIG  0x00
+#define DRV2605_MODE_EXTTRIGEDGE  0x01
+#define DRV2605_MODE_EXTTRIGLVL  0x02
+#define DRV2605_MODE_PWMANALOG  0x03
+#define DRV2605_MODE_AUDIOVIBE  0x04
+#define DRV2605_MODE_REALTIME  0x05
+#define DRV2605_MODE_DIAGNOS  0x06
+#define DRV2605_MODE_AUTOCAL  0x07
+
+#define DRV2605_REG_RTPIN 0x02
+#define DRV2605_REG_LIBRARY 0x03
+#define DRV2605_REG_WAVESEQ1 0x04
+#define DRV2605_REG_WAVESEQ2 0x05
+#define DRV2605_REG_WAVESEQ3 0x06
+#define DRV2605_REG_WAVESEQ4 0x07
+#define DRV2605_REG_WAVESEQ5 0x08
+#define DRV2605_REG_WAVESEQ6 0x09
+#define DRV2605_REG_WAVESEQ7 0x0A
+#define DRV2605_REG_WAVESEQ8 0x0B
+
+#define DRV2605_REG_GO 0x0C
+#define DRV2605_REG_OVERDRIVE 0x0D
+#define DRV2605_REG_SUSTAINPOS 0x0E
+#define DRV2605_REG_SUSTAINNEG 0x0F
+#define DRV2605_REG_BREAK 0x10
+#define DRV2605_REG_AUDIOCTRL 0x11
+#define DRV2605_REG_AUDIOLVL 0x12
+#define DRV2605_REG_AUDIOMAX 0x13
+#define DRV2605_REG_RATEDV 0x16
+#define DRV2605_REG_CLAMPV 0x17
+#define DRV2605_REG_AUTOCALCOMP 0x18
+#define DRV2605_REG_AUTOCALEMP 0x19
+#define DRV2605_REG_FEEDBACK 0x1A
+#define DRV2605_REG_CONTROL1 0x1B
+#define DRV2605_REG_CONTROL2 0x1C
+#define DRV2605_REG_CONTROL3 0x1D
+#define DRV2605_REG_CONTROL4 0x1E
+#define DRV2605_REG_VBAT 0x21
+#define DRV2605_REG_LRARESON 0x22
 
 class OOutputs
 {
+
 public:
-    
-    const static int MODE_FFEEDBACK = 0;
-    const static int MODE_CABINET   = 1;
-
-    // Hardware Motor Control:
-    // 0 = Switch off
-    // 5 = Left
-    // 8 = Centre
-    // B = Right
-    uint8_t hw_motor_control;
-
-    // Digital Outputs
-    enum
-    {
-        D_EXT_MUTE   = 0x01, // bit 0 = External Amplifier Mute Control
-        D_BRAKE_LAMP = 0x02, // bit 1 = brake lamp
-        D_START_LAMP = 0x04, // bit 2 = start lamp
-        D_COIN1_SUCC = 0x08, // bit 3 = Coin successfully inserted - Chute 2
-        D_COIN2_SUCC = 0x10, // bit 4 = Coin successfully inserted - Chute 1
-        D_MOTOR      = 0x20, // bit 5 = steering wheel central vibration
-        D_UNUSED     = 0x40, // bit 6 = ?
-        D_SOUND      = 0x80, // bit 7 = sound enable
-    };
-    uint8_t dig_out;
-
-    CoinChute chute1, chute2;
 
     OOutputs(void);
     ~OOutputs(void);
 
     void init();
-    bool diag_motor(int16_t input_motor, uint8_t hw_motor_limit, uint32_t packets);
-    bool calibrate_motor(int16_t input_motor, uint8_t hw_motor_limit, uint32_t packets);
-    void tick(const int MODE, int16_t input_motor, int16_t cabinet_type = -1);
-    void set_digital(uint8_t);
-    void clear_digital(uint8_t);
-    void coin_chute_out(CoinChute* chute, bool insert);
+    void tick();
 
 private:
-    const static uint16_t STATE_INIT   = 0;
-    const static uint16_t STATE_DELAY  = 1;
-    const static uint16_t STATE_LEFT   = 2;
-    const static uint16_t STATE_RIGHT  = 3;
-    const static uint16_t STATE_CENTRE = 4;
-    const static uint16_t STATE_DONE   = 5;
-    const static uint16_t STATE_EXIT   = 6;
 
-    // Calibration Counter
-    const static int COUNTER_RESET = 300;
+    int _module;
+    uint8_t _current_v;
 
-    const static uint8_t MOTOR_OFF    = 0;
-    const static uint8_t MOTOR_RIGHT  = 0x5;
-    const static uint8_t MOTOR_CENTRE = 0x8;
-    const static uint8_t MOTOR_LEFT   = 0xB;
-    
+    void setMode(uint8_t mode);
+    void setRealtimeValue(uint8_t rtp);
 
-    // These are calculated during startup in the original game.
-    // Here we just hardcode them, as the motor init code isn't ported.
-    const static uint8_t CENTRE_POS    = 0x80;
-    const static uint8_t LEFT_LIMIT    = 0xC1;
-    const static uint8_t RIGHT_LIMIT   = 0x3C;
+    void writeRegister8(uint8_t reg, uint8_t val);
+    uint8_t readRegister8(uint8_t reg);
 
-    // Motor Limit Values. Calibrated during startup.
-    int16_t limit_left;
-    int16_t limit_right;
-
-    // Motor Centre Position. (We Fudge this for Force Feedback wheel mode.)
-    int16_t motor_centre_pos;
-
-    // Difference between input_motor and input_motor_old
-    int16_t motor_x_change;
-
-    uint16_t motor_state;
-    bool motor_enabled;
-
-    // 0x11: Motor Control Value
-    int8_t motor_control;
-    // 0x12: Movement (1 = Left, -1 = Right, 0 = None)
-    int8_t motor_movement;
-    // 0x14: Is Motor Centered
-    bool is_centered;
-    // 0x16: Motor X Change Latch
-    int16_t motor_change_latch;
-    // 0x18: Speed
-    int16_t speed;
-    // 0x1A: Road Curve
-    int16_t curve;
-    // 0x1E: Increment counter to index motor table for off-road/crash
-    int16_t vibrate_counter;
-    // 0x20: Last Motor X_Change > 8. No need to adjust further.
-    bool was_small_change;
-    // 0x22: Adjusted movement value based on steering 1
-    int16_t movement_adjust1;
-    // 0x24: Adjusted movement value based on steering 2
-    int16_t movement_adjust2;
-    // 0x26: Adjusted movement value based on steering 3
-    int16_t movement_adjust3;
-
-    // Counter control for motor tests
-    int16_t counter;
-
-    // Columns for output
-    uint16_t col1, col2;
-
-    void diag_left(int16_t input_motor, uint8_t hw_motor_limit);
-    void diag_right(int16_t input_motor, uint8_t hw_motor_limit);
-    void diag_centre(int16_t input_motor, uint8_t hw_motor_limit);
-    void diag_done();
-
-    void calibrate_left(int16_t input_motor, uint8_t hw_motor_limit);
-    void calibrate_right(int16_t input_motor, uint8_t hw_motor_limit);
-    void calibrate_centre(int16_t input_motor, uint8_t hw_motor_limit);
-    void calibrate_done();
-
-    void do_motors(const int MODE, int16_t input_motor);
-    void car_moving(const int MODE);
-    void car_stationary();
-    void adjust_motor();
-    void do_motor_crash();
-    void do_motor_offroad();
-    void set_value(const uint8_t*, uint8_t);
-    void done();
-    void motor_output(uint8_t cmd);
-
-    void do_vibrate_upright();
-    void do_vibrate_mini();
 };

@@ -37,6 +37,7 @@
 #include "frontend/menu.hpp"
 
 #include "cannonboard/interface.hpp"
+#include "dashboard/dashboard.hpp"
 #include "engine/oinputs.hpp"
 #include "engine/ooutputs.hpp"
 #include "engine/omusic.hpp"
@@ -206,8 +207,8 @@ static void tick()
             break;
     }
     // Write CannonBoard Outputs
-    if (config.cannonboard.enabled)
-        cannonboard.write(outrun.outputs->dig_out, outrun.outputs->hw_motor_control);
+    // [MPB] if (config.cannonboard.enabled)
+    // [MPB]     cannonboard.write(outrun.outputs->dig_out, outrun.outputs->hw_motor_control);
 
     // Draw SDL Video
     video.draw_frame();  
@@ -331,6 +332,9 @@ int main(int argc, char* argv[])
             cannonboard.init(config.cannonboard.port, config.cannonboard.baud);
             cannonboard.start();
         }
+
+        // Init dashboard
+        dashboard.init(0x74);
 
         // Populate menus
         menu->populate();

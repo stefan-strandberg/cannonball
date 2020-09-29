@@ -556,7 +556,8 @@ void OFerrari::set_ferrari_palette()
     uint8_t pal;
 
     // Denote palette for brake light
-    if (oinputs.brake_adjust >= OInputs::BRAKE_THRESHOLD1)
+    // [MPB] Commented out
+    /*if (oinputs.brake_adjust >= OInputs::BRAKE_THRESHOLD1)
     {
         outrun.outputs->set_digital(OOutputs::D_BRAKE_LAMP);
         pal = 2;
@@ -565,7 +566,7 @@ void OFerrari::set_ferrari_palette()
     {
         outrun.outputs->clear_digital(OOutputs::D_BRAKE_LAMP);
         pal = 0;
-    }
+    }*/
 
     // Car Moving
     if (oinitengine.car_increment >> 16 != 0)

@@ -98,6 +98,9 @@ private:
 
     void digital_steering();
     void digital_pedals();
+
+    // [MPB]  
+    void gear_pedals();
 };
 
 extern OInputs oinputs;
