@@ -76,27 +76,28 @@ void OInputs::tick(Packet* packet)
     else
     {
         // Digital Controls: Simulate Analog
+        /* stestr: We don't need any gamepad
         if (!input.analog || !input.gamepad)
         {
             digital_steering();
             digital_pedals();
         }
+        
         // Analog Controls
         else
-        {
-            input_steering = input.a_wheel;
+        { */
+        input_steering = input.a_wheel;
 
-            // Analog Pedals
-            if (input.analog == 1)
-            {
-                input_acc      = input.a_accel;
-                input_brake    = input.a_brake;
-            }
-            // Digital Pedals
-            else
-            {
-                digital_pedals();
-            }
+        // Analog Pedals
+        if (input.analog == 1)
+        {
+            input_acc      = input.a_accel;
+            input_brake    = input.a_brake;
+        }
+        // Digital Pedals
+        else
+        {
+            digital_pedals();
         }
     }
 }

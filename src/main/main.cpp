@@ -76,7 +76,7 @@ static void quit_func(int code)
 static void process_events(void)
 {
     SDL_Event event;
-
+    input.handle_joy_axis();
     // Grab all events from the queue.
     while(SDL_PollEvent(&event))
     {

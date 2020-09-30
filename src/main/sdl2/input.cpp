@@ -144,6 +144,40 @@ void Input::handle_key(const int key, const bool is_pressed)
     }
 }
 
+// stestr: update steering based on gpio input
+// Todo: Reading gpio :)
+void Input::handle_joy_axis()
+{
+    // Steering
+    // OutRun requires values between 0x48 and 0xb8.
+
+    int16_t value = 32767 ;
+    // -32767 hard left 32767 hard right
+    std::cout << "Axis: " << "X" << " Value: " << (int) value << std::endl;
+   
+    //to 32767
+    int percentage_adjust = ((wheel_zone) << 8) / 100;         
+    int adjusted = value + ((value * percentage_adjust) >> 8);
+    
+    // Make 0 hard left, and 0x80 centre value.
+    adjusted = ((adjusted + (1 << 15)) >> 9);
+    adjusted += 0x40; // Centre
+
+    if (adjusted < 0x40)
+        adjusted = 0x40;
+    else if (adjusted > 0xC0)
+        adjusted = 0xC0;
+
+    // Remove Dead Zone
+    if (wheel_dead)
+    {
+        if (std::abs(CENTRE - adjusted) <= wheel_dead)
+            adjusted = CENTRE;
+    }
+
+    std::cout << "wheel zone : " << wheel_zone << " : " << std::hex << " : " << (int) adjusted << std::endl;
+    a_wheel = adjusted;   
+}
 void Input::handle_joy_axis(SDL_JoyAxisEvent* evt)
 {
     int16_t value = evt->value;

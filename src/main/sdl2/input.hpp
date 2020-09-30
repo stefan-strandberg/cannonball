@@ -65,6 +65,7 @@ public:
     void handle_key_up(SDL_Keysym*);
     void handle_key_down(SDL_Keysym*);
     void handle_joy_axis(SDL_JoyAxisEvent*);
+    void handle_joy_axis();
     void handle_joy_down(SDL_JoyButtonEvent*);
     void handle_joy_up(SDL_JoyButtonEvent*);
     void frame_done();
