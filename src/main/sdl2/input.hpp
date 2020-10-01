@@ -12,6 +12,9 @@
 
 #include <SDL.h>
 
+#define BASE 100
+#define SPI_CHAN 0
+
 class Input
 {
 public:

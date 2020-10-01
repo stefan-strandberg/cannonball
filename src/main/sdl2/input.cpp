@@ -11,11 +11,17 @@
 #include <iostream>
 #include <cstdlib> // abs
 #include "sdl2/input.hpp"
+#include <wiringPiI2C.h>
+#include <wiringPi.h>
+
+#include <mcp3004.h>
 
 Input input;
 
 Input::Input(void)
 {
+    wiringPiSetup();
+    mcp3004Setup (BASE, SPI_CHAN) ; // 3004 and 3008 are the same 4/8 channels
 }
 
 Input::~Input(void)
@@ -150,19 +156,32 @@ void Input::handle_joy_axis()
 {
     // Steering
     // OutRun requires values between 0x48 and 0xb8.
+    int chan;
 
-    int16_t value = 32767 ;
+    int x = analogRead (BASE + 0) ;
+    std::cout << x << std::endl;
+
+    int16_t i = 0;
+    int16_t modifier = 32.0303 * 2;
+    int16_t value = (x * modifier ) -32767 ;
     // -32767 hard left 32767 hard right
+    // Pot 1023 left 0 right
+    // 1023, 32,03030303030303
+    // I=(0 * (32 * 2)) -32767
+    // I=1023 * 32 -32767
     std::cout << "Axis: " << "X" << " Value: " << (int) value << std::endl;
    
     //to 32767
-    int percentage_adjust = ((wheel_zone) << 8) / 100;         
+    int percentage_adjust = ((wheel_zone) << 8) / 100;
+    // percentage_adjust = 0   
+    
     int adjusted = value + ((value * percentage_adjust) >> 8);
     
     // Make 0 hard left, and 0x80 centre value.
     adjusted = ((adjusted + (1 << 15)) >> 9);
+    
     adjusted += 0x40; // Centre
-
+    std::cout << adjusted << std::endl; // 191
     if (adjusted < 0x40)
         adjusted = 0x40;
     else if (adjusted > 0xC0)
